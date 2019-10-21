@@ -1,6 +1,13 @@
 package lesson1;
 
+
 import kotlin.NotImplementedError;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -34,8 +41,32 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortTimes(String inputName, String outputName) {
-        throw new NotImplementedError();
+
+    static public void sortTimes(String inputName, String outputName) throws IOException {
+        BufferedReader text = new BufferedReader(new FileReader(inputName));
+        String line;
+        List<String> dates = new ArrayList<>();
+
+        while ((line = text.readLine()) != null) {
+            dates.add(line);
+        }
+
+        dates.sort(new Comparator<String>() {
+            DateFormat f = new SimpleDateFormat("hh:mm:ss a", Locale.US);
+            @Override
+            public int compare(String o1, String o2) {
+                try {
+                    return f.parse(o1).compareTo(f.parse(o2));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
+
+        try (FileWriter writer = new FileWriter(outputName, false)) {
+            for (String date : dates)
+                writer.write(date + "\n");
+        }
     }
 
     /**
@@ -98,8 +129,23 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        BufferedReader text = new BufferedReader(new FileReader(inputName));
+        String line;
+        Map<Double, Integer> temp = new TreeMap<>();
+
+        while ((line = text.readLine()) != null) {
+            Double key = Double.parseDouble(line.trim());
+            if (temp.containsKey(key))                // если ключ есть в мапе, то
+                temp.put(key, temp.get(key) + 1);     // добавляем его с новым значением
+            else if (key > -273.0 && key < 500.0)     // проверяем на соответствие температур
+                temp.put(key, 1);
+        }
+        try (FileWriter writer = new FileWriter(outputName, false)) {
+            for (Map.Entry<Double, Integer> pair : temp.entrySet())
+                for (int i = 1; i <= pair.getValue(); i++)
+                    writer.write(pair.getKey() + "\n");
+        }
     }
 
     /**
@@ -131,9 +177,47 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+        BufferedReader text = new BufferedReader(new FileReader(inputName));
+        String line;
+        List<Integer> numList = new ArrayList<>();
+        Map<Integer, Integer> numMap = new HashMap<>();
+        //список, чтобы хранить последовательность, мапа - искать нужное число
+
+        while ((line = text.readLine()) != null) {
+            Integer num = Integer.parseInt(line.trim());
+            numList.add(num);                           // Добавляем в список, чтобы сохранить последовательность
+            if (numMap.containsKey(num))                // Если есть в мапе,
+                numMap.put(num, numMap.get(num) + 1);   // добавляем с новым значением
+            else                                        // если нет,
+                numMap.put(num, 1);                     // просто добавляем
+        }
+
+        // Найдём максимальное число влохждений
+        Integer max = (new TreeSet<>(numMap.values())).last();  // treeSet отсортирует по убыванию, и выдаст самое большое число вхождений
+
+        // Найдём число / числа с максимальным вхождением
+        TreeSet<Integer> keys = new TreeSet<>();                // опять сортируем
+        for (Map.Entry<Integer, Integer> pair : numMap.entrySet()) {
+            if (pair.getValue().equals(max))
+                keys.add(pair.getKey());
+        }
+
+        // Найдём финальное нужное число. Если оно одно, то будет первым. А если их несколько, то самое маленькое из них
+        // тоже будет первым
+        Integer num = keys.first();
+
+        // Вывод
+        try (FileWriter writer = new FileWriter(outputName, false)) {
+           for (Integer number : numList) {
+               if (!number.equals(num))
+                   writer.write(number + "\n");
+           }
+           for (int i = 1; i <= max; i++)
+               writer.write(num + "\n");
+        }
     }
+
 
     /**
      * Соединить два отсортированных массива в один
