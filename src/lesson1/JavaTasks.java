@@ -136,9 +136,11 @@ public class JavaTasks {
 
         while ((line = text.readLine()) != null) {
             Double key = Double.parseDouble(line.trim());
+            if (key < -273.0 || key > 500.0)
+                throw new IllegalArgumentException();   // проверяем на диапазон
             if (temp.containsKey(key))                // если ключ есть в мапе, то
                 temp.put(key, temp.get(key) + 1);     // добавляем его с новым значением
-            else if (key > -273.0 && key < 500.0)     // проверяем на соответствие температур
+            else
                 temp.put(key, 1);
         }
         try (FileWriter writer = new FileWriter(outputName, false)) {
