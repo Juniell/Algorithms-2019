@@ -41,13 +41,16 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-
+    // Трудоёмкость: O(N*logN);
+    // Ресурсоёмкость: O(N).
     static public void sortTimes(String inputName, String outputName) throws IOException {
         BufferedReader text = new BufferedReader(new FileReader(inputName));
         String line;
         List<String> dates = new ArrayList<>();
 
         while ((line = text.readLine()) != null) {
+            if (!line.trim().matches("[01][0-9]:[0-5][0-9]:[0-5][0-9] [AP]M"))
+                throw new IOException();
             dates.add(line);
         }
 
@@ -129,6 +132,8 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
+    // Трудоёмкость: O(N*N);
+    // Ресурсоёмкость: O(N).
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         BufferedReader text = new BufferedReader(new FileReader(inputName));
         String line;
@@ -136,10 +141,10 @@ public class JavaTasks {
 
         while ((line = text.readLine()) != null) {
             Double key = Double.parseDouble(line.trim());
-            if (key < -273.0 || key > 500.0)
-                throw new IllegalArgumentException();   // проверяем на диапазон
-            if (temp.containsKey(key))                // если ключ есть в мапе, то
-                temp.put(key, temp.get(key) + 1);     // добавляем его с новым значением
+            if (key < -273.0 || key > 500.0)            // проверка на диапазон
+                throw new IllegalArgumentException();
+            if (temp.containsKey(key))                  // Если ключ есть в мапе, то
+                temp.put(key, temp.get(key) + 1);       // добавляем его с новым значением
             else
                 temp.put(key, 1);
         }
@@ -179,6 +184,8 @@ public class JavaTasks {
      * 2
      * 2
      */
+    // Трудоёмкость: O(N);
+    // Русерсоёмкость: O(N).
     static public void sortSequence(String inputName, String outputName) throws IOException {
         BufferedReader text = new BufferedReader(new FileReader(inputName));
         String line;

@@ -34,35 +34,7 @@ public class JavaAlgorithms {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws IOException {
-        BufferedReader text = new BufferedReader(new FileReader(inputName));
-        String line;
-        List<Integer> list = new ArrayList<>();
-        int dif = 0;                                             // переменная, которая будет считать разницу
-        Pair<Integer, Integer> res = new Pair<>(null, null);     // переменная, которая будет хранить пару
-
-        while ((line = text.readLine()) != null) {
-            Integer num = Integer.parseInt(line);
-            if (num > 0)                            // проверяем на положительность
-                list.add(num);                      // и добавляем  список
-            else
-                throw new IOException();
-        }
-
-        int size = list.size();
-        for (int i = 0; i < size; i++) {                          // сравниваем все элементы
-            Integer numFirst = list.get(i);
-            for (int j = i + 1; j < size; j++) {
-                Integer numSecond = list.get(j);
-                if (numFirst < numSecond && numSecond - numFirst > dif) {
-                    dif = numSecond - numFirst;
-                    res = new Pair<>(i + 1, j + 1); // добавляем +1 к индексам, т.к. здесь отсчёт начинается с 1, а не с 0
-                }
-            }
-        }
-        if (res.getFirst() != null && res.getSecond() != null)
-            return res;
-        else
+    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
             throw new NotImplementedError();
     }
 
@@ -130,6 +102,8 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
+    // Трудоёмкость: O(N*M), N - first.length, M - second.length;
+    // Ресурсоёмкость: O(N*M).
     static public String longestCommonSubstring(String first, String second) {
         int lenF = first.length();
         int lenS = second.length();
@@ -161,11 +135,13 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
+    // Трудоёмкость: O(N*sqrt(N));
+    // Ресурсоёмкость: O(1).
     static public int calcPrimesNumber(int limit) {
         if (limit <= 1)
             return 0;
         int count = 0;
-        // найдём все не простые числа и вычтем их количество из всех
+        // Найдём все не простые числа и вычтем их количество из всех
         for (int i = 2; i <= limit; i++) {
             if (i % 2 == 0)     // если чётное - не простое
                 count++;
@@ -205,6 +181,8 @@ public class JavaAlgorithms {
      * В файле буквы разделены пробелами, строки -- переносами строк.
      * Остальные символы ни в файле, ни в словах не допускаются.
      */
+    // Трудоёмкость: O(N*M*K), N - количество строк, M - размер строк, K - количество слова;
+    // Ресурсоёмкость: O(N*M*K)
     static public Set<String> baldaSearcher(String inputName, Set<String> words) throws IOException {
         BufferedReader text = new BufferedReader(new FileReader(inputName));
         String line;
@@ -254,7 +232,7 @@ public class JavaAlgorithms {
         Pair<Integer, Integer> bottomInd = null;                // .......... нижнего ........
         Pair<Integer, Integer> leftInd = null;                  // .......... левого .........
 
-        List <Pair<Integer, Integer>> list = new ArrayList<>();         //список подходящих точек ждя дальнейшего поиска
+        List <Pair<Integer, Integer>> list = new ArrayList<>();         // список подходящих точек ждя дальнейшего поиска
 
         if (y != 0 && findCh.equals(lines.get(y - 1).charAt(x)))        // Находим верхний эдемент, если это возможно,
             list.add(new Pair<>(x, y - 1));                             // и добавляем его в список.
