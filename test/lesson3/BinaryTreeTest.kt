@@ -82,6 +82,7 @@ class BinaryTreeTest {
                 "After removal of $toRemove from $list binary tree height increased"
             )
         }
+
     }
 
     @Test
