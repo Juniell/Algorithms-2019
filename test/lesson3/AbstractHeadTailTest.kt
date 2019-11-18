@@ -46,8 +46,6 @@ abstract class AbstractHeadTailTest {
         assertEquals(false, set.contains(9))
         assertEquals(false, set.contains(10))
 
-        assertFailsWith<IllegalArgumentException> { tree.subSet(8, 3) }
-        assertFailsWith<IllegalArgumentException> { tree.subSet(-1, -3) }
         assertFailsWith<IllegalArgumentException> { tree.headSet(null) }
 
         set = tree.headSet(127)
@@ -69,8 +67,6 @@ abstract class AbstractHeadTailTest {
         assertEquals(true, set.contains(9))
         assertEquals(true, set.contains(10))
 
-        assertFailsWith<IllegalArgumentException> { tree.subSet(8, 3) }
-        assertFailsWith<IllegalArgumentException> { tree.subSet(-1, -3) }
         assertFailsWith<IllegalArgumentException> { tree.tailSet(null) }
 
         set = tree.tailSet(-128)
@@ -130,8 +126,10 @@ abstract class AbstractHeadTailTest {
         for (i in 1..10)
             assertEquals(true, allSet.contains(i))
 
+        assertFailsWith<AssertionError> { tree.subSet(1, null) }
         assertFailsWith<IllegalArgumentException> { tree.subSet(8, 3) }
         assertFailsWith<IllegalArgumentException> { tree.subSet(-1, -3) }
+        assertFailsWith<IllegalArgumentException> { tree.subSet(1, 1) }
         assertFailsWith<IllegalArgumentException> { tree.subSet(null, null) }
 
         val random = Random()

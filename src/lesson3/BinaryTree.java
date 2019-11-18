@@ -81,8 +81,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return right == null || right.value.compareTo(node.value) > 0 && checkInvariant(right);
     }
 
-    //Поиск минимального элемента
-    // O(h), где h - высота дерева
     private Node<T> min (Node<T> start) {
         if (start == null)
             return null;
@@ -157,6 +155,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Проверка наличия следующего элемента
          * Средняя
          */
+        // Трудоёмкость: O(1);
+        // Ресурсоёмкость: O(1).
         @Override
         public boolean hasNext() {
             return current != null;
@@ -166,13 +166,15 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Поиск следующего элемента
          * Средняя
          */
+        // Трудоёмкость: O(log(N));
+        // Ресурсоёмкость: O(1).
         @Override
         public T next() {
             previous = current;
             current = nextNode(current);
-            if (previous == null)
-                throw new NoSuchElementException();
-            return previous.value;
+            if (previous != null)
+                return previous.value;
+            throw new NoSuchElementException();
         }
 
         /**
@@ -210,8 +212,13 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @NotNull
     @Override
+    // Трудоёмкость: O(1);
+    // Ресурсоёмкость: O(1).
     public SortedSet<T> subSet(T fromElement, T toElement) {
         if (toElement == null && fromElement == null)
+            throw new IllegalArgumentException();
+        assert toElement != null;
+        if (toElement.compareTo(fromElement) == 0)
             throw new IllegalArgumentException();
        return new BinaryTreeSubSet(this, fromElement, toElement);
     }
@@ -222,6 +229,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @NotNull
     @Override
+    // Трудоёмкость: O(1);
+    // Ресурсоёмкость: O(1).
     public SortedSet<T> headSet(T toElement) {
         if (toElement == null)
             throw new IllegalArgumentException();
@@ -234,6 +243,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @NotNull
     @Override
+    // Трудоёмкость: O(1);
+    // Ресурсоёмкость: O(1).
     public SortedSet<T> tailSet(T fromElement) {
         if (fromElement == null)
             throw new IllegalArgumentException();
@@ -278,7 +289,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         }
 
         private int size(Node<T> node) {
-            Iterator iterator = new BinaryTreeIterator();
             int count = 0;
             if (node == null)
                 return count;
