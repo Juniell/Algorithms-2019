@@ -2,10 +2,15 @@ package lesson6;
 
 import kotlin.NotImplementedError;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import static java.lang.Math.max;
+
 
 @SuppressWarnings("unused")
-public class JavaDynamicTasks {
+public class JavaDynamicTasks<T> {
     /**
      * Наибольшая общая подпоследовательность.
      * Средняя
@@ -18,8 +23,17 @@ public class JavaDynamicTasks {
      * Если есть несколько самых длинных общих подпоследовательностей, вернуть любую из них.
      * При сравнении подстрок, регистр символов *имеет* значение.
      */
+    // Трудоёмкость: O(N*M);
+    // Ресурсоёмкость: O(N*M).
     public static String longestCommonSubSequence(String first, String second) {
-        throw new NotImplementedError();
+        List<String> firstList = new ArrayList<>(Arrays.asList(first.split("")));
+        List<String> secondList = new ArrayList<>(Arrays.asList(second.split("")));
+
+        List<String> list = longestCommonSubSequence(firstList, secondList);
+
+        return new StringBuilder(list.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("", "", ""))).reverse().toString();
     }
 
     /**
@@ -34,8 +48,62 @@ public class JavaDynamicTasks {
      * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
      */
+    // Трудоёмкость: O(N^2);
+    // Ресурсоёмкость: O(N^2).
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        throw new NotImplementedError();
+        //изначальный List<Integer> в List<String>
+        List<String> listStr = new ArrayList<>(list.size());
+        for (Integer myInt : list)
+            listStr.add(String.valueOf(myInt));
+
+        java.util.Collections.sort(list);
+        List<String> incListStr = new ArrayList<>(list.size());
+
+        //отсортированный List<Integer> в List<String>
+        for (Integer myInt : list)
+            incListStr.add(String.valueOf(myInt));
+
+        List<String> res = longestCommonSubSequence(listStr, incListStr);
+        List<Integer> result = new ArrayList<>();
+
+        // обратный перевод List<String> в List<Integer> + revers
+        for (int i = res.size() - 1; i >= 0; i--)
+            result.add(Integer.valueOf(res.get(i)));
+
+        return result;
+    }
+
+    private static List<String> longestCommonSubSequence(List<String> first, List<String> second) {
+        int n = first.size();
+        int m = second.size();
+        int[][] matrix = new int[n + 1][m + 1];
+
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < m + 1; j++) {
+                String f = first.get(i - 1);
+                String s = second.get(j - 1);
+                if (first.get(i - 1).equals(second.get(j - 1)))
+                    matrix[i][j] = matrix[i - 1][j - 1] + 1;
+                else
+                    matrix[i][j] = max(matrix[i - 1][j], matrix[i][j - 1]);
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        while (n > 0 && m > 0) {
+            String f = first.get(n - 1);
+            String s = second.get(m - 1);
+            if (first.get(n - 1).equals(second.get(m - 1))) {
+                result.add(first.get(n - 1));
+                n--;
+                m--;
+            } else if (matrix[n - 1][m] == matrix[n][m])
+                n--;
+            else
+                m--;
+        }
+
+        return result;
     }
 
     /**
