@@ -2,11 +2,10 @@ package lesson5;
 
 import kotlin.NotImplementedError;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unused")
-public class JavaGraphTasks {
+public class    JavaGraphTasks {
     /**
      * Эйлеров цикл.
      * Средняя
@@ -119,7 +118,36 @@ public class JavaGraphTasks {
      *
      * Ответ: A, E, J, K, D, C, H, G, B, F, I
      */
+    //Трудоёмкость: O(N!);
+    // Ресурсоёмкость: O(N!),
+    // где N - длина самого длинного простого пути.
     public static Path longestSimplePath(Graph graph) {
-        throw new NotImplementedError();
+        Set<Graph.Vertex> vertices = graph.getVertices();
+
+        if (vertices.isEmpty())
+           return new Path();
+
+        Path resultPath = new Path(vertices.iterator().next());
+        PriorityQueue<Path> queue = new PriorityQueue<>();
+        int maxLength = -1;
+
+        for (Graph.Vertex vert : vertices)
+            queue.add(new Path(vert));
+
+        while (!queue.isEmpty()) {
+            Path path = queue.poll();
+            List<Graph.Vertex> vertex = path.getVertices();
+            if (path.getLength() > maxLength) {
+                resultPath = path;
+                maxLength = path.getLength();
+                if (vertex.size() == vertices.size())
+                    break;
+            }
+            Set<Graph.Vertex> neighbors = graph.getNeighbors(vertex.get(vertex.size()-1));
+            for (Graph.Vertex neighbor : neighbors)
+                if (!path.contains((neighbor)))
+                    queue.add(new Path(path, graph, neighbor));
+        }
+        return resultPath;
     }
 }

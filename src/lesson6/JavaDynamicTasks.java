@@ -51,7 +51,6 @@ public class JavaDynamicTasks<T> {
     // Трудоёмкость: O(N^2);
     // Ресурсоёмкость: O(N^2).
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        //изначальный List<Integer> в List<String>
         List<String> listStr = new ArrayList<>(list.size());
         for (Integer myInt : list)
             listStr.add(String.valueOf(myInt));
@@ -59,14 +58,12 @@ public class JavaDynamicTasks<T> {
         java.util.Collections.sort(list);
         List<String> incListStr = new ArrayList<>(list.size());
 
-        //отсортированный List<Integer> в List<String>
         for (Integer myInt : list)
             incListStr.add(String.valueOf(myInt));
 
         List<String> res = longestCommonSubSequence(listStr, incListStr);
         List<Integer> result = new ArrayList<>();
 
-        // обратный перевод List<String> в List<Integer> + revers
         for (int i = res.size() - 1; i >= 0; i--)
             result.add(Integer.valueOf(res.get(i)));
 
